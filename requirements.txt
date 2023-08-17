@@ -1,0 +1,8 @@
+loguru~=0.7.0
+Pyrogram~=2.0.106
+TgCrypto==1.2.5
+python-dotenv~=1.0.0
+pydantic_settings
+fastapi~=0.101.1
+pydantic~=2.1.1
+uvicorn~=0.23.2
