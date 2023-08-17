@@ -23,10 +23,7 @@ class UserBotSettings(BaseAppSettings):
 
 
 class Settings(UserBotSettings):
-    PROJECT_NAME: Optional[str] = "telegram_userbot_google_sheets"
-    LOGGING_LEVEL: Optional[str | int] = logging.getLevelName(
-        os.getenv("LOGGING_LEVEL", "INFO")
-    )
+    LOGGING_LEVEL: Optional[str] = "INFO"
 
     class Config:
         case_sensitive = True
