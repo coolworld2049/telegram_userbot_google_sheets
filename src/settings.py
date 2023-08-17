@@ -20,13 +20,7 @@ class UserBotSettings(BaseAppSettings):
 
     @property
     def session_string(self):
-        return (
-            pathlib.Path(
-                self.SESSION_STRING_FILE
-            )
-            .open("r")
-            .readline()
-        )
+        return pathlib.Path(self.SESSION_STRING_FILE).open("r").readline()
 
 
 class Settings(UserBotSettings):

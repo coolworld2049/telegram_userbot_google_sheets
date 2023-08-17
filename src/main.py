@@ -30,7 +30,9 @@ app = FastAPI(
 
 @app.on_event("startup")
 async def startup():
-    client = userbot = Client("my", in_memory=True, session_string=settings.session_string)
+    client = userbot = Client(
+        "my", in_memory=True, session_string=settings.session_string
+    )
     await userbot.start()
     if not client:
         raise ValueError(client)
