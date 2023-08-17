@@ -1,5 +1,3 @@
-import pathlib
-
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import APIKeyQuery
 from loguru import logger
@@ -10,7 +8,6 @@ from starlette import status
 from _logging import configure_logging
 from schemas import SpreadsheetWebhookRequest, SpreadsheetWebhookResponse
 from settings import settings
-from userbot.main import create_userbot
 
 configure_logging()
 
@@ -26,18 +23,15 @@ async def verify_api_key(key: str = Depends(api_key)):
 
 
 app = FastAPI(
-    title=pathlib.Path(__file__).parent.parent.name.replace("_"," ").capitalize(),
+    title=settings.PROJECT_NAME,
     dependencies=[Depends(verify_api_key)],
 )
 
 
 @app.on_event("startup")
 async def startup():
-    client = await create_userbot(
-        api_id=settings.API_ID,
-        api_hash=settings.API_HASH,
-        phone_number=settings.PHONE_NUMBER,
-    )
+    client = userbot = Client("my", in_memory=True, session_string=settings.session_string)
+    await userbot.start()
     if not client:
         raise ValueError(client)
     app.client = client

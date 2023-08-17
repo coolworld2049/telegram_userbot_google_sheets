@@ -1,4 +1,3 @@
-import logging
 import os
 import pathlib
 from typing import Optional
@@ -16,13 +15,22 @@ class BaseAppSettings(BaseSettings):
 
 
 class UserBotSettings(BaseAppSettings):
-    API_ID: int
-    API_HASH: str
-    PHONE_NUMBER: str
+    SESSION_STRING_FILE: str
     API_KEY: str
+
+    @property
+    def session_string(self):
+        return (
+            pathlib.Path(
+                self.SESSION_STRING_FILE
+            )
+            .open("r")
+            .readline()
+        )
 
 
 class Settings(UserBotSettings):
+    PROJECT_NAME: Optional[str]
     LOGGING_LEVEL: Optional[str] = "INFO"
 
     class Config:

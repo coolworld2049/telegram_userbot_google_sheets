@@ -4,14 +4,13 @@ source ./.env
 
 startup() {
   docker build -t telegram-bot .
-  docker run -it --rm -d \
+  docker run -it -d \
     --name telegram-bot \
     --hostname telegram-bot \
     --env-file .env \
+    -p 80:80 \
     -e MAX_WORKERS=1 \
-    -e CONFIRM_CODE
-    -p 8000:80 \
-    --restart no \
+    -e SESSION_STRING_FILE=./session_maker/my.txt \
     telegram-bot:latest
 }
 
