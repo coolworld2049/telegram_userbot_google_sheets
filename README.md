@@ -21,6 +21,9 @@ let columnTelegramUsername = ``;
 let columnUserProblem = ``;
 let notificationMessageColumnRange = [11, 15];
 ```
+
+`pip install pyrogram
+`
 `python src/session_maker/maker.py
 `
 
