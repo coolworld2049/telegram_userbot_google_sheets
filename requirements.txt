@@ -8,3 +8,9 @@ pydantic~=2.1.1
 uvicorn~=0.23.2
 starlette~=0.27.0
 gunicorn
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+oauth2client
+gspread
+black

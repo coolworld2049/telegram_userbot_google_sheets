@@ -1,3 +1,4 @@
+import gspread
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.security import APIKeyQuery
 from loguru import logger
@@ -27,6 +28,8 @@ app = FastAPI(
     dependencies=[Depends(verify_api_key)],
 )
 
+gs = gspread.service_account(settings.GOOGLE_CREDENTIALS_FILE)
+
 
 @app.on_event("startup")
 async def startup():
@@ -51,20 +54,22 @@ async def shutdown():
     tags=["telegram"],
     response_model=SpreadsheetWebhookResponse,
 )
-async def google_spreadsheet_webhook(data: SpreadsheetWebhookRequest):
+async def google_spreadsheet_webhook(payload: SpreadsheetWebhookRequest):
     client: Client = app.client  # noqa
     sent_messages = []
     success = None
     fail = None
-    for chat_id in data.chat_id:
+    for chat_id in payload.chat_id:
+        text = "\n\n".join(list(map(lambda x: f"<b>{x[0]}</b> - <code>{x[1]}</code>", payload.data.items())))
         m: Message = await client.send_message(
-            chat_id, data.text, parse_mode=data.parse_mode
+            chat_id,
+            text,
         )
         sent_messages.append(m.id)
-    if len(data.chat_id) == len(sent_messages):
-        success = len(data.chat_id)
+    if len(payload.chat_id) == len(sent_messages):
+        success = len(payload.chat_id)
     else:
-        fail = abs(len(data.chat_id) - len(sent_messages))
+        fail = abs(len(payload.chat_id) - len(sent_messages))
     response = SpreadsheetWebhookResponse(
         message_ids=sent_messages, success=success, fail=fail
     )

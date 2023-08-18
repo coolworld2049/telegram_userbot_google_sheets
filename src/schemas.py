@@ -1,13 +1,11 @@
 from typing import Any
 
 from pydantic import BaseModel
-from pyrogram.enums import ParseMode
 
 
 class SpreadsheetWebhookRequest(BaseModel):
     chat_id: list[Any]
-    text: str
-    parse_mode: ParseMode | None = ParseMode.HTML
+    data: dict
 
 
 class SpreadsheetWebhookResponse(BaseModel):
