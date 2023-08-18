@@ -95,27 +95,44 @@ async def google_spreadsheet(
             update=update_bot_user,
             username=chat.username,
         )
+
+        _text = "\n".join(
+            list(
+                map(
+                    lambda x: f"<b>{x[0]}</b> - <code>{x[1]}</code>",
+                    list(payload.data.items())[-5:-1],
+                )
+            )
+        )
+        b1_col = """Опишите проблему подробнее
+
+Почему это важно?
+Укажите факты, которые подтверждают необходимость подсветки.
+УТП или другие детали."""
+        text = (
+            f"Ответ по Вашей проблеме\n<code>{payload.data[b1_col]}</code>\n\n{_text}"
+        )
         if bot_user.is_notified:
+            um = await client.edit_message_text(
+                bot_user.username, bot_user.message_id, text=text
+            )
+            update_bot_user2 = BotUserUpdate(is_notified=True, message_id=um.id)
+            bot_user = crud.bot_user.upsert(
+                db, update=update_bot_user2, username=chat.username
+            )
             return HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Header 'Выполнено' is true. Message already sent to telegram user",
             )
-        text = "\n\n".join(
-            list(
-                map(
-                    lambda x: f"<b>{x[0]}</b> - <code>{x[1]}</code>",
-                    list(payload.data.items())[-4:],
-                )
-            )
-        )
+
         m: Message = await client.send_message(
             chat_id,
             text,
         )
         sent_messages.append(m.id)
-        update_bot_user2 = BotUserUpdate(is_notified=True, message_id=m.id)
+        update_bot_user3 = BotUserUpdate(is_notified=True, message_id=m.id)
         bot_user = crud.bot_user.upsert(
-            db, update=update_bot_user2, username=chat.username
+            db, update=update_bot_user3, username=chat.username
         )
     if len(payload.chat_id) == len(sent_messages):
         success = len(payload.chat_id)
