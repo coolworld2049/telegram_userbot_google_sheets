@@ -4,10 +4,19 @@ from fastapi.security import APIKeyQuery
 from loguru import logger
 from pyrogram import Client
 from pyrogram.types import Message
+from sqlalchemy.orm import Session
 from starlette import status
 
+import crud
 from _logging import configure_logging
-from schemas import SpreadsheetWebhookRequest, SpreadsheetWebhookResponse
+from db.dependency import get_session
+from db.utils import create_database
+from schemas import (
+    SpreadsheetWebhookRequest,
+    SpreadsheetWebhookResponse,
+    BotUserCreate,
+    BotUserUpdate,
+)
 from settings import settings
 
 configure_logging()
@@ -33,6 +42,7 @@ gs = gspread.service_account(settings.GOOGLE_CREDENTIALS_FILE)
 
 @app.on_event("startup")
 async def startup():
+    await create_database()
     client = userbot = Client(
         "my", in_memory=True, session_string=settings.session_string
     )
@@ -52,20 +62,61 @@ async def shutdown():
 @app.post(
     "/telegram/send_message",
     tags=["telegram"],
-    response_model=SpreadsheetWebhookResponse,
 )
-async def google_spreadsheet_webhook(payload: SpreadsheetWebhookRequest):
+async def google_spreadsheet(
+    payload: SpreadsheetWebhookRequest, db: Session = Depends(get_session)
+):
+    if payload.data["Выполнено"]:
+        return HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Header 'Выполнено' is true. Message already sent to telegram user",
+        )
     client: Client = app.client  # noqa
     sent_messages = []
     success = None
     fail = None
     for chat_id in payload.chat_id:
-        text = "\n\n".join(list(map(lambda x: f"<b>{x[0]}</b> - <code>{x[1]}</code>", payload.data.items())))
+        if not chat_id or chat_id == "":
+            return HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"chat_id is None",
+            )
+        chat = await client.get_chat(chat_id)
+        update_bot_user = BotUserUpdate(
+            first_name=chat.first_name,
+            last_name=chat.last_name,
+            username=chat.username,
+        )
+        create_bot_user = BotUserCreate(**update_bot_user.model_dump())
+        create_bot_user.id = chat.id
+        bot_user = crud.bot_user.upsert(
+            db,
+            create=create_bot_user,
+            update=update_bot_user,
+            username=chat.username,
+        )
+        if bot_user.is_notified:
+            return HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Header 'Выполнено' is true. Message already sent to telegram user",
+            )
+        text = "\n\n".join(
+            list(
+                map(
+                    lambda x: f"<b>{x[0]}</b> - <code>{x[1]}</code>",
+                    list(payload.data.items())[-4:],
+                )
+            )
+        )
         m: Message = await client.send_message(
             chat_id,
             text,
         )
         sent_messages.append(m.id)
+        update_bot_user2 = BotUserUpdate(is_notified=True, message_id=m.id)
+        bot_user = crud.bot_user.upsert(
+            db, update=update_bot_user2, username=chat.username
+        )
     if len(payload.chat_id) == len(sent_messages):
         success = len(payload.chat_id)
     else:

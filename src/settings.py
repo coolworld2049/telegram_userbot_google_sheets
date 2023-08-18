@@ -31,6 +31,9 @@ class UserBotSettings(BaseAppSettings):
 
 class Settings(UserBotSettings, GoogleSettings):
     PROJECT_NAME: Optional[str]
+    DATABASE_URL: str = (
+        f"sqlite:///{pathlib.Path(__file__).parent.__str__()}/db/base.db"
+    )
     LOGGING_LEVEL: Optional[str] = "INFO"
 
     class Config:
