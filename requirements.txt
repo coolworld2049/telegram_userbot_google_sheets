@@ -11,4 +11,5 @@ gunicorn
 sqlalchemy==2.0.20
 stringcase~=1.2.0
 black
-gspread~=5.10.0
+
+Jinja2~=3.1.2

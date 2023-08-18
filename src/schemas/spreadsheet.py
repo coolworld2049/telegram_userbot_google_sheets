@@ -1,15 +1,18 @@
-from typing import Any
-
 from pydantic import BaseModel
 
 
-class SpreadsheetWebhookRequest(BaseModel):
-    chat_id: list[Any]
+class SpreadsheetBase(BaseModel):
+    message_id: int | None = None
+    is_notified: bool = False
+
+
+class SpreadsheetRequest(SpreadsheetBase):
+    chat_id: int | str
     data: dict
-    event: dict
+    event: dict | None = None
+    user_problem_column_name: str
+    notification_message_column_range: list[int]
 
 
-class SpreadsheetWebhookResponse(BaseModel):
-    message_ids: list[int]
-    success: int | None
-    fail: int | None
+class SpreadsheetResponse(SpreadsheetBase):
+    content: str | None = None

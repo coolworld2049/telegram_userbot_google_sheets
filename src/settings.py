@@ -14,12 +14,6 @@ class BaseAppSettings(BaseSettings):
     load_dotenv(stage_dotenv, override=True) if stage_dotenv else None
 
 
-class GoogleSettings(BaseAppSettings):
-    GOOGLE_CREDENTIALS_FILE: Optional[str] = "service_account.json"
-    GOOGLE_SPREADSHEET_NAME: Optional[str] = None
-    GOOGLE_RANGE_NAME: Optional[str] = None
-
-
 class UserBotSettings(BaseAppSettings):
     SESSION_STRING_FILE: str
     API_KEY: str
@@ -29,7 +23,7 @@ class UserBotSettings(BaseAppSettings):
         return pathlib.Path(self.SESSION_STRING_FILE).open("r").readline()
 
 
-class Settings(UserBotSettings, GoogleSettings):
+class Settings(UserBotSettings):
     PROJECT_NAME: Optional[str]
     DATABASE_URL: str = (
         f"sqlite:///{pathlib.Path(__file__).parent.__str__()}/db/base.db"
