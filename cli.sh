@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-source ./.env
-
 startup() {
   echo "$(openssl rand -hex 64)" > api_key.txt
   echo "API key generated and saved to api_key.txt"
@@ -10,12 +8,12 @@ startup() {
   docker run -it -d \
     --name telegram_userbot_google_sheets \
     --hostname telegram_userbot_google_sheets \
-    --env-file .env \
     -p 80:80 \
     -e MAX_WORKERS=1 \
     -e HOST=0.0.0.0 \
     -e PORT=80 \
     -e SESSION_STRING_FILE=./session_maker/my.txt \
+    -e API_KEY_FILE=./api_key.txt \
     telegram_userbot_google_sheets:latest
 }
 

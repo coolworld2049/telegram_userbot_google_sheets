@@ -6,10 +6,25 @@
 
 # Telegram userbot for google sheets
 
+Install [event_handler.gs](google-scripts/event_handler.gs) in "Extensions > Apps Scripts"
+
+Then modify variables
+```js
+let domain = "";
+let api_key = "";
+let spreadsheetId = "";
+let sheetName  = "Sheet";
+let logSheetName = "LogSheet";
+let headersRange = "A1:S1";
+let onEditRange = [13,19];
+let columnTelegramUsername = ``;
+let columnUserProblem = ``;
+let notificationMessageColumnRange = [11, 15];
+```
 `python src/session_maker/maker.py
 `
 
 `bash cli.sh startup
 `
 
-Application launched on https://localhost:80/docs
+Application launched on https://127.0.0.1:80/docs

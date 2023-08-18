@@ -1,3 +1,5 @@
+from contextlib import suppress
+
 from fastapi import HTTPException, APIRouter
 from loguru import logger
 from pyrogram import Client
@@ -23,7 +25,8 @@ async def google_spreadsheet(request: Request, payload: SpreadsheetRequest):
         )
     chat = await client.get_chat(payload.chat_id)
     response = SpreadsheetResponse(message_id=payload.message_id)
-    await client.delete_messages(payload.chat_id, payload.data["message_id"])
+    with suppress(Exception):
+        await client.delete_messages(payload.chat_id, payload.data["message_id"])
     m: Message = await client.send_message(
         payload.chat_id,
         render_template(
@@ -38,5 +41,5 @@ async def google_spreadsheet(request: Request, payload: SpreadsheetRequest):
     )
     response.is_notified = True
     response.message_id = m.id
-    logger.info(f"Sent message: {m.__dict__}")
+    logger.info(f"Sent message: {m.id}")
     return response

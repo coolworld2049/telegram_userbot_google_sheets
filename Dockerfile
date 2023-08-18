@@ -6,6 +6,7 @@ RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
 COPY src /app
 
+COPY api_key.txt /app/api_key.txt
 ENV PYTHONPATH=/app
 
 ENV PYTHONDONTWRITEBYTECODE=1

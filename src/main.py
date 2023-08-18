@@ -1,25 +1,13 @@
-from fastapi import FastAPI, Depends, HTTPException
-from fastapi.security import APIKeyQuery
+from fastapi import FastAPI, Depends
 from loguru import logger
-from pyrogram import Client, idle
-from starlette import status
+from pyrogram import Client
 
 from _logging import configure_logging
+from routes.deps import verify_api_key
 from routes.spreadsheet import telegram
 from settings import settings
 
 configure_logging()
-
-api_key = APIKeyQuery(name="api_key")
-
-
-async def verify_api_key(key: str = Depends(api_key)):
-    if key != settings.api_key:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid API key",
-        )
-
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
