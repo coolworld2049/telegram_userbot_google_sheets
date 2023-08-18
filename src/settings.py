@@ -16,18 +16,19 @@ class BaseAppSettings(BaseSettings):
 
 class UserBotSettings(BaseAppSettings):
     SESSION_STRING_FILE: str
-    API_KEY: str
+    API_KEY_FILE: str = str(pathlib.Path(__file__).parent.parent / "api_key.txt")
 
     @property
     def session_string(self):
         return pathlib.Path(self.SESSION_STRING_FILE).open("r").readline()
 
+    @property
+    def api_key(self):
+        return pathlib.Path(self.API_KEY_FILE).open("r").readline().replace("\n", "")
+
 
 class Settings(UserBotSettings):
     PROJECT_NAME: Optional[str]
-    DATABASE_URL: str = (
-        f"sqlite:///{pathlib.Path(__file__).parent.__str__()}/db/base.db"
-    )
     LOGGING_LEVEL: Optional[str] = "INFO"
 
     class Config:

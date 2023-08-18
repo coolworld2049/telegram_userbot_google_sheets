@@ -19,7 +19,7 @@ async def google_spreadsheet(request: Request, payload: SpreadsheetRequest):
     if not payload.chat_id or payload.chat_id == "":
         return HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"'chat_id' must not be empty",
+            detail=f"chat_id must not be empty",
         )
     chat = await client.get_chat(payload.chat_id)
     response = SpreadsheetResponse(message_id=payload.message_id)

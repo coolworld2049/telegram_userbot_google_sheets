@@ -3,22 +3,30 @@
 source ./.env
 
 startup() {
-  docker build -t telegram-bot .
+  echo "$(openssl rand -hex 32)" > api_key.txt
+  echo "API key generated and saved to api_key.txt"
+
+  docker build -t telegram_userbot_google_sheets .
   docker run -it -d \
-    --name telegram-bot \
-    --hostname telegram-bot \
+    --name telegram_userbot_google_sheets \
+    --hostname telegram_userbot_google_sheets \
     --env-file .env \
     -p 80:80 \
     -e MAX_WORKERS=1 \
+    -e HOST=0.0.0.0 \
+    -e PORT=80 \
     -e SESSION_STRING_FILE=./session_maker/my.txt \
-    telegram-bot:latest
+    telegram_userbot_google_sheets:latest
 }
 
 dev() {
-  docker-compose -f docker-compose.dev.yml up -d
+  echo "NotImplemented"
 }
 shutdown() {
-  docker-compose down --rmi local --remove-orphans
+  rm api_key.txt
+  docker kill telegram_userbot_google_sheets
+  docker rm telegram_userbot_google_sheets
+  docker rmi telegram_userbot_google_sheets
 }
 
 print_usage() {

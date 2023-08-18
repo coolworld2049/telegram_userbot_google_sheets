@@ -14,7 +14,7 @@ api_key = APIKeyQuery(name="api_key")
 
 
 async def verify_api_key(key: str = Depends(api_key)):
-    if key != settings.API_KEY:
+    if key != settings.api_key:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid API key",
