@@ -15,7 +15,7 @@ class BaseAppSettings(BaseSettings):
 
 
 class UserBotSettings(BaseAppSettings):
-    SESSION_STRING_FILE: str
+    SESSION_STRING_FILE: str = "src/session_maker/my.txt"
     API_KEY_FILE: str = str(pathlib.Path(__file__).parent.parent / "api_key.txt")
 
     @property
@@ -28,7 +28,7 @@ class UserBotSettings(BaseAppSettings):
 
 
 class Settings(UserBotSettings):
-    PROJECT_NAME: Optional[str]
+    PROJECT_NAME: Optional[str] = "TelegramUserbotGoogleSheets"
     LOGGING_LEVEL: Optional[str] = "INFO"
 
     class Config:
