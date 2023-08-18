@@ -3,7 +3,7 @@
 source ./.env
 
 startup() {
-  echo "$(openssl rand -hex 32)" > api_key.txt
+  echo "$(openssl rand -hex 64)" > api_key.txt
   echo "API key generated and saved to api_key.txt"
 
   docker build -t telegram_userbot_google_sheets .
