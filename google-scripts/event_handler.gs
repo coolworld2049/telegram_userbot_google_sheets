@@ -73,7 +73,7 @@ function doEdit(e) {
     let respDataObj = JSON.parse(respData);
 
     respDataObj.message_id ? sheet.getRange(e.range.rowStart, 18).setValue(respDataObj.message_id) : null;
-    sheet.getRange(e.range.rowStart, 19).setValue(respDataObj.is_notified);
+    sheet.getRange(e.range.rowStart, 19).setValue(respDataObj.is_notified).insertCheckboxes();
     logger.log("--------------------------------------------")
   } else {
     logger.log(`columnStart=${e.columnStart}) not in onEditRange=${onEditRange.toString()}`);
