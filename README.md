@@ -42,6 +42,8 @@ Application launched on http://127.0.0.1:80.
 
 ## Example
 
+[spreadsheet](https://github.com/coolworld2049/telegram_userbot_google_sheets/blob/master/telegramUserbotGoogleSheets.xlsx)
+
 ![Example](https://github.com/coolworld2049/telegram_userbot_google_sheets/assets/82733942/4ac8c19f-1d6e-4642-9670-9afdf1746f6a)
 
 
