@@ -35,3 +35,9 @@ Create a API account here: https://my.telegram.org/apps
 `
 
 Application launched on https://127.0.0.1:80/docs
+
+## Example
+
+![Запросы_Единого_Окна - Google Таблицы](https://github.com/coolworld2049/telegram_userbot_google_sheets/assets/82733942/4ac8c19f-1d6e-4642-9670-9afdf1746f6a)
+
+
