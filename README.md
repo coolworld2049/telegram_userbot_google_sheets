@@ -6,9 +6,11 @@
 
 # Telegram userbot for google sheets
 
+Create a API account here: https://my.telegram.org/apps.
+
 Install [event_handler.gs](google-scripts/event_handler.gs) in "Extensions > Apps Scripts"
 
-Then modify variables
+Then modify variables:
 
 ```js
 let domain = "";
@@ -23,8 +25,6 @@ let columnUserProblem = ``;
 let notificationMessageColumnRange = [11, 15];
 ```
 
-Create a API account here: https://my.telegram.org/apps
-
 `pip install pyrogram
 `
 
@@ -34,10 +34,14 @@ Create a API account here: https://my.telegram.org/apps
 `bash cli.sh startup
 `
 
-Application launched on https://127.0.0.1:80/docs
+`cat api_key.txt
+`
+Copy the string and paste it into `let api_key = "value";` in the [event_handler.gs](google-scripts/event_handler.gs).
+
+Application launched on http://127.0.0.1:80.
 
 ## Example
 
-![Запросы_Единого_Окна - Google Таблицы](https://github.com/coolworld2049/telegram_userbot_google_sheets/assets/82733942/4ac8c19f-1d6e-4642-9670-9afdf1746f6a)
+![Example](https://github.com/coolworld2049/telegram_userbot_google_sheets/assets/82733942/4ac8c19f-1d6e-4642-9670-9afdf1746f6a)
 
 
